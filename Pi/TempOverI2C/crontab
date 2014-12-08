@@ -22,4 +22,4 @@
 # m h  dom mon dow   command
 
 
-@reboot python /home/pi/HomeAutomation/Pi/TempOverI2C/temp_over_i2c.py >> ~/temp.log
+0 * * * * python /home/pi/HomeAutomation/Pi/TempOverI2C/temp_over_i2c.py >> ~/temp.log 2>&1
