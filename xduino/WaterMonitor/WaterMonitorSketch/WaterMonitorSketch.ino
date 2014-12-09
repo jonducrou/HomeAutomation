@@ -12,7 +12,7 @@ Adafruit_CC3000 cc3000 = Adafruit_CC3000(ADAFRUIT_CC3000_CS, ADAFRUIT_CC3000_IRQ
                                          SPI_CLOCK_DIV2); // you can change this clock speed but DI
 
 #define WLAN_SSID       "Unmarked_ASIO_Van"        // cannot be longer than 32 characters!
-#define WLAN_PASS       "ThreeThousandThistles"
+#define WLAN_PASS       "WIFI_PASSWORD"
 #define WLAN_SECURITY   WLAN_SEC_WPA2
 
 #define apiKey "KEY_HERE"
