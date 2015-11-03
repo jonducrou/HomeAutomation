@@ -35,9 +35,9 @@ def read_state():
   if isFail:
     print "Fail!"
     return -1
-  elif isFull:
-    print "Full!"
-    return -1
+#  elif isFull: #bad reads on full - dropping for now
+#    print "Full!"
+#    return -2
   elif isOff:
     print "Off!"
     return 0
@@ -48,6 +48,7 @@ def read_state():
 def read_state_pwm(x):
   global tx,isOn,isOff,isFail
   d = time.time() - tx
+  print d
   if d > .0400:
     isOff = True
   else:
@@ -69,11 +70,7 @@ temp = read_temp()
 print temp
 print state
 
-f = urllib.urlopen("http://www.devicehub.net/io/537/?apiKey=" + key + "&WineRoom=" + str(temp))
-s = f.read()
-print s
-
-f = urllib.urlopen("http://www.devicehub.net/io/537/?apiKey=" + key + "&ACUnit=" + str(state))
+f = urllib.urlopen("http://data.sparkfun.com/input/0lJKr0NxrDtLlgaE7OvV?private_key=" + key + "&ac_status=" + str(state) + "&temp=" + str(temp))
 s = f.read()
 print s
 
@@ -96,15 +93,19 @@ def turn_on():
     print "Turning on"
     flip_state()
 
-if not (state == -1 ): #it's on or off
-  if not sunny(): # don't run now, no solar
+if (state == 1) or (state == 0 ): #not in error
+  if not sunny() and temp < 25: # don't run now, no solar
     print "It's not sunny..."
     turn_off()
   else:
-    if (temp > 25 and state == 0):
-      print "It's too hot..."
-      turn_on()
-    elif (temp < 23 and state == 1):
+    if (state == 0):
+      if temp > 25 and not sunny():
+        print "It's too hot... even without the sun."
+        turn_on()
+      elif temp > 24 and sunny():
+        print "It's too hot... and the power is free during the day"
+        turn_on()
+    elif (temp < 22 and state == 1):
       print "It's cool..."
       turn_off()
 
