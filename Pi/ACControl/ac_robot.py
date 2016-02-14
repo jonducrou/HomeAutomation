@@ -66,13 +66,10 @@ def read_temp():
 
 state = read_state()
 temp = read_temp()
+target = -1
 
 print temp
 print state
-
-f = urllib.urlopen("http://data.sparkfun.com/input/0lJKr0NxrDtLlgaE7OvV?private_key=" + key + "&ac_status=" + str(state) + "&temp=" + str(temp))
-s = f.read()
-print s
 
 def flip_state():
   GPIO.output(7, GPIO.HIGH)
@@ -84,11 +81,15 @@ def sunny():
   return now_hour > 6 and now_hour < 18
 
 def turn_off():
+  global target
+  target = 0
   if not (state == 0):
     print "Turning off"
     flip_state()
 
 def turn_on():
+  global target
+  target = 1
   if not (state == 1):
     print "Turning on"
     flip_state()
@@ -110,3 +111,7 @@ if (state == 1) or (state == 0 ): #not in error
       turn_off()
 
 GPIO.cleanup()
+
+f = urllib.urlopen("http://data.sparkfun.com/input/0lJKr0NxrDtLlgaE7OvV?private_key=" + key + "&ac_target=" + str(target) + "&ac_status=" + str(state) + "&temp=" + str(temp))
+s = f.read()
+print s
